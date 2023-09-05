@@ -1,0 +1,6 @@
+source("logic/MultiResponse/logic_mrMdhglm.R", local = TRUE)[[1]]
+source("logic/MultiResponse/logic_mrJointModel.R", local = TRUE)[[1]]
+source("logic/MultiResponse/logic_mrFactor.R", local = TRUE)[[1]]
+source("logic/MultiResponse/logic_mrSem.R", local = TRUE)[[1]]
+#source("logic/MultiResponse/logic_mrDSem.R", local = TRUE)[[1]]
+source("logic/MultiResponse/logic_mrDSem2.R", local = TRUE)[[1]]

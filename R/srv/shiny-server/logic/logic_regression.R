@@ -1,0 +1,6 @@
+source("logic/Regression/logic_rgLm.R", local = T)
+source("logic/Regression/logic_rgGlm.R", local = T)
+source("logic/Regression/logic_rgLogit.R", local = T)
+source("logic/Regression/logic_rgProbit.R", local = T)
+source("logic/Regression/logic_rgLoglinear.R", local = T)
+source("logic/Regression/logic_rgJglm.R", local = T)

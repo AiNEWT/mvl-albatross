@@ -1,0 +1,5 @@
+source("logic/BasicAnalysis/logic_baDescriptive.R", local = T)
+source("logic/BasicAnalysis/logic_baTtest.R", local = T)
+source("logic/BasicAnalysis/logic_baAnova.R", local = T)
+source("logic/BasicAnalysis/logic_baFrequency.R", local = T)
+source("logic/BasicAnalysis/logic_baCorrelation.R", local = T)

@@ -1,0 +1,5 @@
+source("logic/RandomEffects/logic_reLmm.R", local = T)
+source("logic/RandomEffects/logic_reGlmm.R", local = T)
+source("logic/RandomEffects/logic_reHglm.R", local = T)
+source("logic/RandomEffects/logic_reDhglm.R", local = T)
+source("logic/RandomEffects/logic_reCubicSpline.R", local = T)

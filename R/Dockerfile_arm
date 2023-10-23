@@ -1,7 +1,7 @@
 ARG R_BASE_VERSION=4.3.1
 ARG SHINY_VERSION=1.5.19.995
 
-FROM --platform=linux/amd64 rocker/rstudio:${R_BASE_VERSION}
+FROM --platform=linux/arm64 rocker/rstudio:${R_BASE_VERSION}
 
 # LABEL org.opencontainers.image.licenses="GPL-2.0-or-later" \
 #       org.opencontainers.image.source="[SOME GITHUB REPOs]" \

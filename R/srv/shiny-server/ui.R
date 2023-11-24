@@ -7,7 +7,14 @@ library(rintrojs)
 library(shinyBS)
 library(bsplus)
 
-ui <- navbarPage(
+ui <- fluidPage(
+  tags$h2("Albatross Login"),
+  verbatimTextOutput("auth_output")
+)
+
+ui <- secure_app(ui)
+
+auth_ui <- navbarPage(
     title = "Albatross Analytics",
     # theme = shinytheme("simplex"),
     theme = shinytheme("flatly"),

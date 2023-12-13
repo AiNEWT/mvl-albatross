@@ -8,6 +8,22 @@ library(rintrojs)
 library(shinyBS)
 library(bsplus)
 
+ui <- fluidPage(
+  auth_ui(
+    id = "auth",
+    # add image on top ?
+    tags_top = 
+      tags$div(
+        tags$h4("Albatross Analytics", style = "align:center"),
+        tags$img(
+          src = "https://www.r-project.org/logo/Rlogo.png", width = 100
+      )
+    )
+  ),
+  # authentication module
+  verbatimTextOutput("auth_output")
+)
+
 ui <- navbarPage(
     title = "Albatross Analytics",
     # theme = shinytheme("simplex"),
@@ -22,11 +38,6 @@ ui <- navbarPage(
     source("ui/ui_multiResponse.R", local = TRUE)[[1]],
     source("ui/ui_albatrossMaterials.R", local = TRUE)[[1]]
     # source("ui/ui_albatrossQA.R", local = TRUE)[[1]]
-)
-
-ui <- fluidPage(
-  tags$h2("My secure application"),
-  verbatimTextOutput("auth_output")
 )
 
 ui <- secure_app(ui)

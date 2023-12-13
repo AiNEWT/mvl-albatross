@@ -80,8 +80,8 @@ server <- function(input, output, session) {
         check_credentials = check_credentials(credentials)
     )
     
-    output$auth_output <- renderprint({
-        reactivevaluestolist(res_auth)
+    output$auth_output <- renderPrint({
+        reactiveValuesToList(res_auth)
     })
 
     # Default Apps

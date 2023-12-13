@@ -9,17 +9,29 @@ library(shinyBS)
 library(bsplus)
 
 ui <- fluidPage(
-  auth_ui(
-    id = "auth",
-    # add image on top ?
-    tags_top = 
-      tags$div(
-        tags$h4("Albatross Analytics", style = "align:center"),
-        tags$img(
-          src = "https://www.r-project.org/logo/Rlogo.png", width = 100
-      )
-    )
-  ),
+  # auth_ui(
+  #   id = "auth",
+  #   # add image on top ?
+  #   tags_top = 
+  #     tags$div(
+  #       tags$h4("Albatross Analytics", style = "align:center"),
+  #       tags$img(
+  #         src = "https://www.r-project.org/logo/Rlogo.png", width = 100
+  #     )
+  #   ),
+  #   # add information on bottom ?
+  #   tags_bottom = tags$div(
+  #     tags$p(
+  #       "For any question, please contact ",
+  #       tags$a(
+  #         href = "mailto:info@ainewt.ai?Subject=Albatross%20aAnalytics",
+  #         target="_top", "info"
+  #       )
+  #     )
+  #   ),
+  #   background = NULL,
+  #   lan = use_language("en")
+  # ),
   # authentication module
   verbatimTextOutput("auth_output")
 )

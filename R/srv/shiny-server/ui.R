@@ -1,4 +1,5 @@
 library(shiny)
+library(shinymanager)
 library(shinythemes)
 library(shinyWidgets)
 library(shinydashboard)
@@ -7,14 +8,7 @@ library(rintrojs)
 library(shinyBS)
 library(bsplus)
 
-ui <- fluidPage(
-  tags$h2("Albatross Login"),
-  verbatimTextOutput("auth_output")
-)
-
-ui <- secure_app(ui)
-
-auth_ui <- navbarPage(
+ui <- navbarPage(
     title = "Albatross Analytics",
     # theme = shinytheme("simplex"),
     theme = shinytheme("flatly"),
@@ -29,3 +23,10 @@ auth_ui <- navbarPage(
     source("ui/ui_albatrossMaterials.R", local = TRUE)[[1]]
     # source("ui/ui_albatrossQA.R", local = TRUE)[[1]]
 )
+
+ui <- fluidPage(
+  tags$h2("My secure application"),
+  verbatimTextOutput("auth_output")
+)
+
+ui <- secure_app(ui)

@@ -1,3 +1,4 @@
+library(shinymanager)
 library(editData)
 library(tidyverse)
 library(psych)
@@ -60,13 +61,16 @@ source("module/ggsem.R")
 options(shiny.maxRequestSize=1024^3)
 options(java.parameters = "-Xmx8192m")
 
-# Password Rules
-validate_pwd_custom <- function(pwd) {
-  all(vapply(
-    X = c("[0-9]+", "[a-z]+", "[A-Z]+", "[[:punct:]]+", ".{8,}"),
-    FUN = grepl, x = pwd, FUN.VALUE = logical(1)
-  ))
-}
+# define some basic credentials (on data.frame)
+credentials <- data.frame(
+  user = c("albatross", "admin"), # mandatory
+  password = c("albatross", "admin"), # mandatory
+  start = c("2023-11-01"), # optinal (all others)
+  expire = c(NA, NA),
+  admin = c(FALSE, TRUE),
+  comment = "Simple and secure authentification mechanism for single ‘Shiny’ applications.",
+  stringsAsFactors = FALSE
+)
 
 server <- function(input, output, session) {
 
@@ -75,9 +79,9 @@ server <- function(input, output, session) {
     res_auth <- secure_server(
         check_credentials = check_credentials(credentials)
     )
-
-    output$auth_output <- renderPrint({
-        reactiveValuesToList(res_auth)
+    
+    output$auth_output <- renderprint({
+        reactivevaluestolist(res_auth)
     })
 
     # Default Apps

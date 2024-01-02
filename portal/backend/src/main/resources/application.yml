@@ -1,0 +1,103 @@
+spring:
+  group:
+    local: local
+    develop: container
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  cloud:
+    config:
+      name: ainewtBackEnd
+      profile: develop
+  #  datasource:
+  #    url: "jdbc:postgresql://localhost:5432/test"
+  #    username: "postgres"
+  #    password: "test"
+  data:
+    mongodb:
+      uri: "mongodb://localhost:27017/"
+      database: portal
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+#  ssl:
+#    bundle:
+#      jks:
+#        server:
+#          key:
+#            alias: "server"
+#          keystore:
+#            location: "classpath:server.p12"
+#            password: "secret"
+#            type: "PKCS12"
+#      pem:
+#        client:
+#          truststore:
+#            certificate: "classpath:client.crt"
+---
+spring:
+  config:
+    activate:
+      on-profile: container
+  cloud:
+    config:
+      name: ainewtBackEnd
+      profile: container
+  #  datasource:
+  #    url: "jdbc:postgresql://postgres:5432/test"
+  #    username: "postgres"
+  #    password: "djsh!1324"
+  data:
+    mongodb:
+      uri: "mongodb://localhost:27017/"
+      database: portal
+---
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health, beans, conditions, env, metrics
+        exclude: threaddump, heapdump
+  prometheus:
+    enabled: true
+---
+logging:
+  level:
+    root: error
+    org.mongodb: error
+    ai.ainewt.backend: debug
+    com.zaxxer.hikari: off
+    org.springframework: error
+    #org.springframework.security: trace
+    #org.springframework.kafka: error
+    #org.apache.kafka: error
+  pattern:
+    #console: "%d{HH:mm:ss.SSS} %-5level - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: "/tmp/ainewt-portal-api.log"
+  logback:
+    rollingpolicy:
+      file-name-pattern: "/tmp/ainewt-portal-api%d{yyyy-MM-dd}_%i.log"
+      max-file-size: 100MB
+      max-history: 10
+---
+custom:
+  zipped-path: "/tmp/"
+---
+ainewt:
+  app:
+    jwtSecret: ======================AiNEWT=Backend============================
+    jwtExpirationMs: 86400000

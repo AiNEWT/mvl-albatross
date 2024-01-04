@@ -81,8 +81,8 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/v1/user/**").permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/api/v1/service/**")).hasRole("USER")
 //                                .requestMatchers("/api/v1/test/**").permitAll()
-                                .requestMatchers(new AntPathRequestMatcher("/api/v1/service/**")).permitAll()//.hasRole("USER")
 //                                .requestMatchers(GET,"/api/v1/service/user").hasAuthority("USER")
 //                                .requestMatchers(POST,"/api/v1/service/user").hasAuthority("USER")
 //                                .requestMatchers(PUT,"/api/v1/service/user").hasAuthority("USER")

@@ -9,43 +9,62 @@ export default class Home extends Component {
     super(props);
 
     this.state = {
-      content: ""
+      frame_url: '',
+      isServiceRunning: false,
+      iFrameHeight: '0px',
     };
   }
 
   componentDidMount() {
     const currentUser = AuthService.getCurrentUser();
-    if (!currentUser) this.setState({ redirect: "/login" });
-    this.setState({ currentUser: currentUser, userReady: true })
+    if (!currentUser) this.setState({ redirect: '/login' });
+    this.setState({ currentUser: currentUser, userReady: true });
 
-    UserService.getPublicContent().then(
-      response => {
-        this.setState({
-          content: response.data
-        });
-      },
-      error => {
-        this.setState({ redirect: "/login" });
-      }
-    );
+    if (currentUser) {
+      UserService.getPublicContent().then(
+        response => {
+          this.setState({
+            frame_url: response.data.frame_url,
+            isServiceRunning: response.data.Status === 'running' ? true : false,
+          });
+        },
+        error => {
+          this.setState({ redirect: '/login' });
+        }
+      );
+    } else {
+      this.setState({ redirect: '/login' });
+    }
   }
 
   render() {
+
     if (this.state.redirect) {
       return <Navigate to={this.state.redirect} />
     }
 
+    const {frame_url, isServiceRunning } = this.state;
+
     return (
-      <iframe 
-        src={this.state.content}// URL of the content to be loaded
-        width="100%"  // Width of the iframe
-        height="600"  // Height of the iframe
-        frameBorder="0" // Style of the border, set to 0 for no border
-        allowFullScreen // Allow full screen if the content supports it
-      >
-        {/* Fallback content in case iframes are not supported */}
-        Your browser does not support iframes.
-      </iframe>
+      <div style={{ textAlign: 'center' }}>
+      {isServiceRunning ? (
+        <iframe 
+          src={frame_url}// URL of the content to be loaded
+          width='100%'  // Width of the iframe
+          height='1400px'  // Height of the iframe
+          frameBorder='0' // Style of the border, set to 0 for no border
+          allowFullScreen // Allow full screen if the content supports it
+        >
+          {/* Fallback content in case iframes are not supported */}
+          Your browser does not support iframes.
+        </iframe>
+        ) : (
+          <button onClick={this.createService} style={{ marginTop: '20px' }}>
+            Create Service
+          </button>
+        )
+      }
+      </div>
     );
   }
 }

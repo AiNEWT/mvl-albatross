@@ -13,4 +13,12 @@ public class AlbatrossService {
         return albatrossDao.getContainer(userName);
     }
 
+    public Integer getMaxPortNum() {
+        return albatrossDao.getMaxPortNum();
+    }
+
+    public boolean updateContainerStatus(Document containerStatusDoc) {
+        return albatrossDao.updateContainerStatus(containerStatusDoc);
+    }
+
 }

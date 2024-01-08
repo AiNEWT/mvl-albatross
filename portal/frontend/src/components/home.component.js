@@ -4,16 +4,54 @@ import { Navigate } from "react-router-dom";
 import AuthService from "../services/auth.service";
 import UserService from "../services/user.service";
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export default class Home extends Component {
+  
   constructor(props) {
     super(props);
 
     this.state = {
       frame_url: '',
       isServiceRunning: false,
-      iFrameHeight: '0px',
+      isLoading: false,
     };
   }
+
+  checkServiceStatus = async () => {
+    try {
+      UserService.getPublicContent().then(
+        response => {
+          this.setState({
+            frame_url: response.data.frame_url,
+            isServiceRunning: response.data.Status === 'running' ? true : false,
+            isLoading: response.data.Status === 'running' ? true : false,
+          });
+        },
+        error => {
+          this.setState({ redirect: '/login' });
+        }
+      );
+    } catch (error) {
+      console.error('Error checking service status:', error);
+    }
+  };
+
+  createService = async () => {
+    this.setState({ isLoading: true });
+    UserService.postCreateContainer().then(
+      response => {
+          //console.log(response.data.container_id)        
+          this.setState({ isLoading: false });
+      },
+      error => {
+        this.setState({ redirect: '/login' });
+      }
+    );
+    this.checkServiceStatus();
+  };
 
   componentDidMount() {
     const currentUser = AuthService.getCurrentUser();
@@ -21,17 +59,11 @@ export default class Home extends Component {
     this.setState({ currentUser: currentUser, userReady: true });
 
     if (currentUser) {
-      UserService.getPublicContent().then(
-        response => {
-          this.setState({
-            frame_url: response.data.frame_url,
-            isServiceRunning: response.data.Status === 'running' ? true : false,
-          });
-        },
-        error => {
-          this.setState({ redirect: '/login' });
-        }
-      );
+      try {
+        this.checkServiceStatus();
+      } catch (error) {
+        console.error('Error checking service status:', error);
+      }
     } else {
       this.setState({ redirect: '/login' });
     }
@@ -43,27 +75,29 @@ export default class Home extends Component {
       return <Navigate to={this.state.redirect} />
     }
 
-    const {frame_url, isServiceRunning } = this.state;
+    const {frame_url, isLoading,isServiceRunning } = this.state;
 
     return (
       <div style={{ textAlign: 'center' }}>
-      {isServiceRunning ? (
-        <iframe 
-          src={frame_url}// URL of the content to be loaded
-          width='100%'  // Width of the iframe
-          height='1400px'  // Height of the iframe
-          frameBorder='0' // Style of the border, set to 0 for no border
-          allowFullScreen // Allow full screen if the content supports it
-        >
-          {/* Fallback content in case iframes are not supported */}
-          Your browser does not support iframes.
-        </iframe>
-        ) : (
-          <button onClick={this.createService} style={{ marginTop: '20px' }}>
-            Create Service
-          </button>
-        )
-      }
+        {!isServiceRunning && isLoading && <p>Loading...</p>}
+        {isServiceRunning ? (
+          <iframe 
+            src={frame_url}// URL of the content to be loaded
+            title="iFrameAlbatross"
+            width='100%'  // Width of the iframe
+            height='1400px'  // Height of the iframe
+            frameBorder='0' // Style of the border, set to 0 for no border
+            allowFullScreen // Allow full screen if the content supports it
+          >
+            {/* Fallback content in case iframes are not supported */}
+            Your browser does not support iframes.
+          </iframe>
+          ) : (
+            <button onClick={this.createService} style={{ marginTop: '20px' }}>
+              Create Service
+            </button>
+          )
+        }
       </div>
     );
   }

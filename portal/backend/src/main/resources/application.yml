@@ -79,7 +79,7 @@ logging:
     ai.ainewt.backend: debug
     com.zaxxer.hikari: off
     org.springframework: error
-    #org.springframework.security: trace
+    org.springframework.security: trace
     #org.springframework.kafka: error
     #org.apache.kafka: error
   pattern:

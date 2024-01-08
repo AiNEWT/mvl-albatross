@@ -4,10 +4,6 @@ import { Navigate } from "react-router-dom";
 import AuthService from "../services/auth.service";
 import UserService from "../services/user.service";
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 export default class Home extends Component {
   
   constructor(props) {

@@ -145,8 +145,8 @@ public class AlbatrossController {
                 .append("ExposedPorts",new Document(String.format("%d/tcp",maxPortNum),new Document()))
                 .append("HostConfig",
                         new Document("PortBindings",
-                                new Document(String.format("%d/tcp",maxPortNum),
-                                        Arrays.asList(new Document("HostPort","3838"))
+                                new Document("3838/tcp",
+                                        Arrays.asList(new Document("HostPort",String.format("%d",maxPortNum)))
                                 )
                             )
                         )

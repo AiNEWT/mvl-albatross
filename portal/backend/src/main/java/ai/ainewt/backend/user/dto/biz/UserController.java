@@ -89,7 +89,7 @@ public class UserController {
 
         } catch (Exception e) {
             responseEntity = new ResponseEntity<>(
-                    new Document("results", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR
+                    new Document("message", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR
             );
             return responseEntity;
         }
@@ -106,7 +106,7 @@ public class UserController {
                 if (checkUserEmail)
                     checkMessage.append("Email ");
                 checkMessage.append("Already Exists");
-                responseEntity = new ResponseEntity<>(new Document("results", checkMessage),HttpStatus.INTERNAL_SERVER_ERROR);
+                responseEntity = new ResponseEntity<>(new Document("message", checkMessage),HttpStatus.INTERNAL_SERVER_ERROR);
                 return responseEntity;
             }
 
@@ -122,16 +122,16 @@ public class UserController {
 
             if(passswordLength < 8) {
                 responseEntity = new ResponseEntity<>(
-                        new Document("results", "Password More then 8 Characters"),
+                        new Document("message", "Password More then 8 Characters"),
                         HttpStatus.INTERNAL_SERVER_ERROR);
                 return responseEntity;
             }
 
             Document results = userService.registerUser(bodyDoc);
-            responseEntity = new ResponseEntity<>(results,HttpStatus.OK);
+            responseEntity = new ResponseEntity<>(new Document("message","Sign Up Done! Try login!"),HttpStatus.OK);
         } else {
             logger.debug("checkMessage : {}", checkMessage);
-            responseEntity = new ResponseEntity<>(new Document("results", checkMessage),HttpStatus.INTERNAL_SERVER_ERROR);
+            responseEntity = new ResponseEntity<>(new Document("message", checkMessage),HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return responseEntity;

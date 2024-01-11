@@ -195,4 +195,44 @@ public class AlbatrossController {
 
         return responseEntity;
     }
+
+    @Operation(summary = "Basic User Services", description = "Create User Services")
+    @Parameters(value = {
+            @Parameter(name = "bodyDoc",required = false,schema = @Schema(implementation = Document.class))
+    }
+    )
+    @RequestMapping(value = "/api/v1/service/stop",
+            consumes = "application/json",
+            produces = "application/json",
+            method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<?> stopUserService(@RequestHeader HttpHeaders headers,
+                                               //@RequestParam HashMap<String,String> paramsMap,
+                                               @RequestBody Document bodyDoc ) throws InterruptedException, ExecutionException {
+
+        ResponseEntity<?> responseEntity = null;
+        //logger.debug("createContainerDoc bodyDoc : {}",bodyDoc.toString());
+
+        String userName = bodyDoc.getString("username");
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Check Existing Cluster
+        Document userContainer = albatrossService.getContainer(bodyDoc.get("username").toString());
+        if (userContainer != null && !userContainer.isEmpty()) {
+            Document inspectContainer = getContainerStatus(userContainer.get("container_id").toString());
+            Document containerState = inspectContainer.get("State",Document.class);
+
+            if (containerState.get("Running").equals(true) ) {
+                HttpEntity<String> request = new HttpEntity<String>(headers);
+                String restartContainerUrl = String.format("http://localhost:2375/containers/%s/stop",userContainer.get("container_id").toString());
+                HttpEntity<String> restartRequest = new HttpEntity<String>(headers);
+                ResponseEntity<Document> responseContainerStop = restTemplate.postForEntity(restartContainerUrl,restartRequest,Document.class);
+                responseEntity = new ResponseEntity<>(userContainer, HttpStatus.OK);
+            } else {
+                responseEntity = new ResponseEntity<>(userContainer, HttpStatus.OK);
+                return responseEntity;
+            }
+        }
+        return responseEntity;
+    }
 }

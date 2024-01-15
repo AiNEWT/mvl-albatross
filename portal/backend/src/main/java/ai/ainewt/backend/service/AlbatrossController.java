@@ -9,6 +9,7 @@ import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -26,10 +27,20 @@ public class AlbatrossController {
     @Autowired
     AlbatrossService albatrossService;
 
+    @Value("${ainewt.docker.url}")
+    private String dockerUrl;
+
+    @Value("${ainewt.docker.port}")
+    private Integer dockerPort;
+
+    // TODO : Add Authentication of Docker
+
     private Document getContainerStatus(String containerId) {
         RestTemplate restTemplate = new RestTemplate();
         String inspectContainerUrl = String.format(
-                "http://localhost:2375/containers/%s/json",
+                "%s:%d/containers/%s/json",
+                dockerUrl,
+                dockerPort,
                 containerId);
         ResponseEntity<String> response
                 = restTemplate.getForEntity(inspectContainerUrl, String.class);
@@ -65,7 +76,7 @@ public class AlbatrossController {
                     return responseEntity;
                 }
                 StringBuilder frameUrl = new StringBuilder();
-                frameUrl.append("http://localhost:");
+                frameUrl.append(String.format("%s:",dockerUrl));
                 frameUrl.append(userContainer.get("ports").toString());
                 //logger.debug("frameUrl : {}",frameUrl);
 
@@ -126,7 +137,7 @@ public class AlbatrossController {
 
             if (containerState.get("Running").equals(false) ) {
                 HttpEntity<String> request = new HttpEntity<String>(headers);
-                String restartContainerUrl = String.format("http://localhost:2375/containers/%s/start",userContainer.get("container_id").toString());
+                String restartContainerUrl = String.format("%s:%d/containers/%s/start",dockerUrl,dockerPort,userContainer.get("container_id").toString());
                 HttpEntity<String> restartRequest = new HttpEntity<String>(headers);
                 ResponseEntity<Document> responseContainerReStart = restTemplate.postForEntity(restartContainerUrl,restartRequest,Document.class);
                 responseEntity = new ResponseEntity<>(userContainer, HttpStatus.OK);
@@ -138,7 +149,7 @@ public class AlbatrossController {
 
         Integer maxPortNum = albatrossService.getMaxPortNum();
 
-        String createContainerUrl = "http://localhost:2375/containers/create";
+        String createContainerUrl = String.format("%s:%d/containers/create",dockerUrl,dockerPort);
 
         Document createContainerDoc = new Document()
                 .append("Image","mvl-albatross:test")
@@ -156,8 +167,8 @@ public class AlbatrossController {
 
         logger.debug("createContainerDoc : {}",createContainerDoc.toString());
 
-        HttpHeaders postHeaders = new HttpHeaders();
-        postHeaders.setContentType(MediaType.APPLICATION_JSON);
+        //HttpHeaders postHeaders = new HttpHeaders();
+        //postHeaders.setContentType(MediaType.APPLICATION_JSON);
 
         try {
 
@@ -179,7 +190,7 @@ public class AlbatrossController {
             containerDoc.append("ports",maxPortNum);
             //containerDoc.append("name","");
 
-            String startContainerUrl = String.format("http://localhost:2375/containers/%s/start",containerIdShort);
+            String startContainerUrl = String.format("%s:%d/containers/%s/start",dockerUrl,dockerPort,containerIdShort);
 
             request = new HttpEntity<String>(headers);
             ResponseEntity<Document> responseContainerStart = restTemplate.postForEntity(startContainerUrl,request,Document.class);
@@ -199,7 +210,7 @@ public class AlbatrossController {
     @Operation(summary = "Basic User Services", description = "Create User Services")
     @Parameters(value = {
             @Parameter(name = "bodyDoc",required = false,schema = @Schema(implementation = Document.class))
-    }
+        }
     )
     @RequestMapping(value = "/api/v1/service/stop",
             consumes = "application/json",
@@ -224,7 +235,7 @@ public class AlbatrossController {
 
             if (containerState.get("Running").equals(true) ) {
                 HttpEntity<String> request = new HttpEntity<String>(headers);
-                String restartContainerUrl = String.format("http://localhost:2375/containers/%s/stop",userContainer.get("container_id").toString());
+                String restartContainerUrl = String.format("%s:%d/containers/%s/stop",dockerUrl,dockerPort,userContainer.get("container_id").toString());
                 HttpEntity<String> restartRequest = new HttpEntity<String>(headers);
                 ResponseEntity<Document> responseContainerStop = restTemplate.postForEntity(restartContainerUrl,restartRequest,Document.class);
                 responseEntity = new ResponseEntity<>(userContainer, HttpStatus.OK);

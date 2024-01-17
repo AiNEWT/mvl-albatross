@@ -71,7 +71,7 @@ export default class Home extends Component {
       return <Navigate to={this.state.redirect} />
     }
 
-    const {frame_url, isLoading,isServiceRunning } = this.state;
+    const {frame_url, isLoading, isServiceRunning } = this.state;
 
     return (
       <div style={{ textAlign: 'center' }}>

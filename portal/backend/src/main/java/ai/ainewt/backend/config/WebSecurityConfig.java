@@ -23,6 +23,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.springframework.http.HttpMethod.*;
@@ -48,7 +49,11 @@ public class WebSecurityConfig {
             config.setAllowedHeaders(Collections.singletonList("*"));
             config.setAllowedMethods(Collections.singletonList("*"));
             config.setAllowedOriginPatterns(
-                    Collections.singletonList("http://localhost:[3000,5000,8080,8081]")
+                    Arrays.asList(
+                            "http://localhost:[3000,5000,8080,8081]", // DEV
+                            "http://192.168.1.11:[3000,5000,8080,8081]", // DEMO
+                            "http://221.149.79.169:[3000,5000,8080,8081]"  // DEMO PUBLIC IP
+                    )
             );
             config.setAllowCredentials(true);
             return config;

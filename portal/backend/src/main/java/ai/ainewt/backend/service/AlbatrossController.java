@@ -76,7 +76,8 @@ public class AlbatrossController {
                     return responseEntity;
                 }
                 StringBuilder frameUrl = new StringBuilder();
-                frameUrl.append(String.format("%s:",dockerUrl));
+                // TODO : Dev / Stage / Product / Cloud .env Load
+                frameUrl.append(String.format("%s:","http://221.149.79.169"));
                 frameUrl.append(userContainer.get("ports").toString());
                 //logger.debug("frameUrl : {}",frameUrl);
 
